@@ -222,7 +222,31 @@ UniFi is professional-grade equipment at prosumer prices. It's great for learnin
 
 Skills you build here transfer to enterprise environments.
 
+## Official UniFi API
+
+Ubiquiti provides an **official REST API** for programmatic access to UniFi infrastructure.
+
+**Documentation**: https://developer.ui.com/site-manager/v1.0.0/gettingstarted
+
+**Authentication**: API Keys generated at unifi.ui.com, passed via `X-API-Key` header.
+
+**Key Endpoints** (base: `https://api.ui.com`):
+- `GET /v1/hosts` — List all hosts (UDM Pro, etc.)
+- `GET /v1/hosts/{id}` — Get host by ID
+- `GET /v1/sites` — List all sites
+- `GET /v1/devices` — List all devices (APs, switches, gateways)
+- `GET /v1/isp-metrics` — ISP health metrics
+- `POST /v1/isp-metrics/query` — Query ISP metrics with filters
+- `GET /v1/sdwan-configs` — List SD-WAN configurations
+
+**Rate Limits**: 100 req/min (Early Access), 10,000 req/min (Stable v1).
+
+**Note**: API keys are currently read-only. Write endpoints are planned for future releases.
+
+Additional per-application APIs (Network, Protect) are documented at https://developer.ui.com/network.
+
 ## Official Documentation
+- UniFi API: https://developer.ui.com
 - UniFi Network Application: https://help.ui.com/hc/en-us/categories/200320654-UniFi
 - UniFi Network Application User Guide: https://help.ui.com/hc/en-us/articles/360012282273-UniFi-Network-Application
 - UniFi Device Adoption: https://help.ui.com/hc/en-us/articles/204909374-UniFi-Device-Adoption
