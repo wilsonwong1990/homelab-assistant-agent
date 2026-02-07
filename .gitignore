@@ -27,3 +27,6 @@ logs/
 # Test output
 test-output/
 coverage/
+
+#Private repolist
+*.private.md
