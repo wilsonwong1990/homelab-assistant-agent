@@ -85,7 +85,7 @@ The main agent (`.github/agents/homelab-assistant.agent.md`) coordinates these s
 
 3. **Update `repolist.private.md`**: Add your homelab repositories to the list:
    ```bash
-   # Edit repolist.md to include your repositories
+   # Edit repolist.private.md to include your repositories
    vim repolist.md
    ```
 
