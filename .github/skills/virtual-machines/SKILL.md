@@ -154,6 +154,13 @@ Most important: Get it working, then optimize if you notice issues.
 4. **Explain the reasoning** - So you understand why we're doing it this way
 5. **Note alternatives** - Other valid approaches and when they make sense
 
+## Official Documentation
+- Proxmox VE: https://pve.proxmox.com/pve-docs/
+- VMware vSphere/ESXi: https://docs.vmware.com/en/VMware-vSphere/index.html
+- libvirt: https://libvirt.org/documentation.html
+- cloud-init: https://cloudinit.readthedocs.io/
+- VirtualBox: https://www.virtualbox.org/wiki/Documentation
+
 ## When to Use This Skill
 
 Engage me when:

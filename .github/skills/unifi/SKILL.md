@@ -222,6 +222,11 @@ UniFi is professional-grade equipment at prosumer prices. It's great for learnin
 
 Skills you build here transfer to enterprise environments.
 
+## Official Documentation
+- UniFi Network Application: https://help.ui.com/hc/en-us/categories/200320654-UniFi
+- UniFi Network Application User Guide: https://help.ui.com/hc/en-us/articles/360012282273-UniFi-Network-Application
+- UniFi Device Adoption: https://help.ui.com/hc/en-us/articles/204909374-UniFi-Device-Adoption
+
 ## When to Use This Skill
 
 Engage me for:

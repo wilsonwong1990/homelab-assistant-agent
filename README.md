@@ -1,6 +1,6 @@
 # Homelab Assistant Agent
 
-A specialized GitHub Copilot Agent for homelab infrastructure and operations. This agent uses a **modular skills architecture** to provide expert guidance on Proxmox, Kubernetes (k8s/k3s), virtual machines, firewalls, Ubiquiti Unifi, and documentation management.
+A specialized GitHub Copilot Agent for homelab infrastructure and operations. This agent uses a **modular skills architecture** to provide expert guidance on Proxmox, Kubernetes (k8s/k3s), virtual machines, firewalls, Ubiquiti Unifi, Elastic (ELK) observability, and documentation management.
 
 ## Overview
 
@@ -20,7 +20,8 @@ This agent uses **GitHub Copilot Agent Skills** - a modular architecture where d
     ├── virtual-machines/SKILL.md      # VM management
     ├── firewall/SKILL.md              # Network security
     ├── unifi/SKILL.md                 # UniFi equipment
-    └── documentation/SKILL.md         # Documentation practices
+    ├── documentation/SKILL.md         # Documentation practices
+    └── ELK/SKILL.md                   # Elastic Stack observability
 ```
 
 **Benefits:**
@@ -41,6 +42,7 @@ Each skill provides specialized knowledge:
 - **firewall** (`.github/skills/firewall/`): Network security, rule management, VPN setup, VLAN segmentation
 - **unifi** (`.github/skills/unifi/`): UniFi controller, access points, switches, network optimization
 - **documentation** (`.github/skills/documentation/`): Note-taking, runbooks, knowledge management, issue tracking
+- **ELK** (`.github/skills/ELK/`): Elastic Stack logging, metrics, tracing, dashboards, alerting for homelab observability
 
 ### Orchestrating Agent
 
@@ -314,6 +316,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Kubernetes Documentation](https://kubernetes.io/docs/)
 - [pfSense Documentation](https://docs.netgate.com/pfsense/en/latest/)
 - [Unifi Documentation](https://help.ui.com/)
+- [Elastic Stack Documentation](https://www.elastic.co/guide/index.html)
 
 
 ## Support

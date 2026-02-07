@@ -81,4 +81,10 @@ I won't:
 - Ignore power consumption or noise concerns
 - Forget that you're learning while building
 
+## Official Documentation
+- Proxmox VE: https://pve.proxmox.com/pve-docs/
+- Proxmox Wiki: https://pve.proxmox.com/wiki/Main_Page
+- Proxmox Backup Server: https://pbs.proxmox.com/docs/
+- LXC Containers: https://linuxcontainers.org/lxc/introduction/
+
 This skill activates when you're working on Proxmox-related tasks in your homelab environment.

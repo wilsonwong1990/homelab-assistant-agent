@@ -199,6 +199,13 @@ Allocate your security effort accordingly.
 
 Both are valid - I help you implement appropriate security for homelab scale.
 
+## Official Documentation
+- pfSense: https://docs.netgate.com/pfsense/en/latest/
+- OPNsense: https://docs.opnsense.org/
+- OpenWrt: https://openwrt.org/docs/start
+- WireGuard: https://www.wireguard.com/
+- OpenVPN: https://openvpn.net/community-resources/reference-manual-for-openvpn-2-0/
+
 ## When to Engage This Skill
 
 Use me when:

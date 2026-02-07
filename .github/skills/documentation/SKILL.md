@@ -194,6 +194,13 @@ Putting info where nobody (including you) will find it. Think about where you'd 
 **Stale Information:**
 Never updating docs when things change. Outdated docs are worse than no docs.
 
+## Official Documentation
+- Markdown Guide: https://www.markdownguide.org/basic-syntax/
+- Mermaid: https://mermaid.js.org/intro/
+- MkDocs: https://www.mkdocs.org/
+- Docusaurus: https://docusaurus.io/docs
+- diagrams.net (draw.io): https://www.diagrams.net/doc/faq/
+
 ## Minimal Viable Documentation
 
 **Start With:**

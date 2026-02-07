@@ -130,6 +130,13 @@ I assume you're learning Kubernetes concepts while building useful infrastructur
 - Storing secrets in plain text in Git
 - Making your cluster so complex you're afraid to restart it
 
+## Official Documentation
+- Kubernetes: https://kubernetes.io/docs/
+- K3s: https://docs.k3s.io/
+- Helm: https://helm.sh/docs/
+- Argo CD: https://argo-cd.readthedocs.io/en/stable/
+- Flux: https://fluxcd.io/docs/
+
 ## When to Engage Me
 
 Invoke this skill when:
