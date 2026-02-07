@@ -103,9 +103,9 @@ Example: "In your homelab, a single Proxmox host with local ZFS storage works gr
 
 ## Repository Awareness
 
-**Using repolist.md**
+**Using repolist.private.md**
 
-Check `repolist.md` to understand the user's repository ecosystem:
+Check `repolist.private.md` to understand the user's repository ecosystem:
 - What repos exist and their purposes
 - Where to log issues for specific work
 - How configurations relate across repositories
