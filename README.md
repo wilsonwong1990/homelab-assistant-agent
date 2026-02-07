@@ -1,21 +1,55 @@
 # Homelab Assistant Agent
 
-A specialized GitHub Copilot Agent for homelab infrastructure and operations. This agent provides expert guidance on Proxmox, Kubernetes (k8s/k3s), virtual machines, firewalls, Ubiquiti Unifi, and maintains documentation for homelab work.
+A specialized GitHub Copilot Agent for homelab infrastructure and operations. This agent uses a **modular skills architecture** to provide expert guidance on Proxmox, Kubernetes (k8s/k3s), virtual machines, firewalls, Ubiquiti Unifi, and documentation management.
 
 ## Overview
 
 The Homelab Assistant Agent is designed to help you manage and optimize your homelab environment. It understands that homelab setups are different from production environments and provides appropriate recommendations while teaching best practices.
 
+### Modular Architecture
+
+This agent uses **GitHub Copilot Agent Skills** - a modular architecture where domain expertise is separated into focused, reusable skills. Each skill is loaded contextually based on your needs:
+
+```
+.github/
+├── agents/
+│   └── homelab-assistant.agent.md    # Orchestrating agent
+└── skills/
+    ├── proxmox/SKILL.md               # Proxmox expertise
+    ├── kubernetes/SKILL.md            # K8s/K3s expertise
+    ├── virtual-machines/SKILL.md      # VM management
+    ├── firewall/SKILL.md              # Network security
+    ├── unifi/SKILL.md                 # UniFi equipment
+    └── documentation/SKILL.md         # Documentation practices
+```
+
+**Benefits:**
+- **Context-aware**: Skills load only when relevant to your task
+- **Maintainable**: Update individual skills independently
+- **Extensible**: Add new skills without modifying the core agent
+- **Focused**: Each skill provides deep expertise in its domain
+
 ## Features
 
-### Core Skills
+### Modular Skills
 
-- **Proxmox Virtual Environment**: VM/CT management, storage, clustering, backups
-- **Kubernetes & K3s**: Cluster deployment, workload management, GitOps, storage
-- **Virtual Machines**: Provisioning, templates, resource optimization
-- **Firewall & Network Security**: pfSense, OPNsense, VLANs, VPN, security policies
-- **Ubiquiti Unifi**: Controller setup, AP/switch configuration, network design
-- **Note Taking & Documentation**: Recording changes, creating runbooks, knowledge base
+Each skill provides specialized knowledge:
+
+- **proxmox** (`.github/skills/proxmox/`): Hypervisor operations, VM/CT management, storage strategies, backup workflows
+- **kubernetes** (`.github/skills/kubernetes/`): K3s/K8s cluster deployment, workload management, GitOps, storage integration
+- **virtual-machines** (`.github/skills/virtual-machines/`): VM provisioning, templates, resource optimization, cloud-init automation
+- **firewall** (`.github/skills/firewall/`): Network security, rule management, VPN setup, VLAN segmentation
+- **unifi** (`.github/skills/unifi/`): UniFi controller, access points, switches, network optimization
+- **documentation** (`.github/skills/documentation/`): Note-taking, runbooks, knowledge management, issue tracking
+
+### Orchestrating Agent
+
+The main agent (`.github/agents/homelab-assistant.agent.md`) coordinates these skills:
+- Understands your overall goal
+- Identifies which skills are relevant
+- Coordinates multi-domain tasks
+- Provides integrated, coherent guidance
+- Maintains homelab context across domains
 
 ### Key Capabilities
 
@@ -23,6 +57,7 @@ The Homelab Assistant Agent is designed to help you manage and optimize your hom
 - **Educational**: Explains best practices and why homelab trade-offs are acceptable
 - **Security-Conscious**: Maintains security awareness even in learning contexts
 - **Repository-Aware**: Uses `repolist.md` to track and manage multiple homelab repositories
+- **Cross-Domain**: Handles projects spanning multiple skill areas
 - **Issue Tracking**: Logs significant work as GitHub issues in appropriate repositories
 
 ## Installation
@@ -39,10 +74,11 @@ The Homelab Assistant Agent is designed to help you manage and optimize your hom
    git clone https://github.com/wilsonwong1990/homelab-assistant-agent.git
    ```
 
-2. **For existing projects**: Copy the agent configuration to your repository:
+2. **For existing projects**: Copy both the agent and skills to your repository:
    ```bash
-   mkdir -p .github/agents
+   mkdir -p .github/agents .github/skills
    cp homelab-assistant-agent/.github/agents/homelab-assistant.agent.md .github/agents/
+   cp -r homelab-assistant-agent/.github/skills/* .github/skills/
    ```
 
 3. **Update `repolist.md`**: Add your homelab repositories to the list:
@@ -58,14 +94,28 @@ The Homelab Assistant Agent is designed to help you manage and optimize your hom
 1. Open a project that includes the homelab agent configuration
 2. Use the GitHub Copilot chat interface
 3. Reference the agent with `@homelab-assistant` or let it auto-infer based on context
-4. Ask questions or request help with homelab tasks
+4. The agent will automatically load relevant skills based on your question
 
 Example prompts:
 ```
 @homelab-assistant How do I set up a k3s cluster on Proxmox VMs?
+# This engages: proxmox, kubernetes, virtual-machines, and documentation skills
+
 @homelab-assistant Help me configure VLANs on my Unifi switch
+# This engages: unifi and firewall skills
+
 @homelab-assistant What's the best way to backup my Proxmox VMs?
+# This engages: proxmox and documentation skills
 ```
+
+### How Skills Load
+
+Skills are loaded **contextually** based on your needs:
+- Ask about Kubernetes → kubernetes skill loads
+- Ask about network security → firewall skill loads
+- Multi-domain question → multiple skills coordinate
+
+You don't need to manually specify which skill to use - the agent figures this out.
 
 ### In GitHub Copilot CLI
 
@@ -101,43 +151,115 @@ The agent can log work as GitHub issues. For significant tasks:
 3. Links related issues across repositories
 4. Updates documentation as needed
 
-## Configuration
+## Extending the Agent
 
-### Customizing the Agent
+### Adding New Skills
 
-Edit `.github/agents/homelab-assistant.agent.md` to:
+To create a new skill:
 
-- Add or remove skills
-- Adjust the agent's tone or approach
-- Include custom tools or integrations
-- Add organization-specific guidelines
+1. **Create skill directory**:
+   ```bash
+   mkdir -p .github/skills/your-skill-name
+   ```
 
-### Adding Skills
+2. **Create SKILL.md file** with frontmatter:
+   ```markdown
+   ---
+   name: your-skill-name
+   description: Brief description of what this skill provides
+   ---
+   
+   # Your Skill Name
+   
+   [Detailed skill instructions and expertise...]
+   ```
 
-To extend the agent with new skills, update the metadata section:
+3. **Update agent metadata** in `.github/agents/homelab-assistant.agent.md`:
+   ```yaml
+   metadata:
+     skills:
+       - proxmox
+       - kubernetes
+       - your-skill-name  # Add your new skill
+   ```
 
-```yaml
-metadata:
-  skills:
-    - proxmox
-    - kubernetes
-    - your-new-skill
-```
+4. **Test your skill**: Use the agent with questions related to your new skill domain
 
-Then add a corresponding section in the agent prompt explaining the skill.
+**Skill Writing Tips:**
+- Be specific about when the skill should activate
+- Provide practical guidance for homelab scale
+- Include both how-to and why explanations
+- Note production differences where relevant
+
+### Customizing Existing Skills
+
+Edit any skill file in `.github/skills/[skill-name]/SKILL.md` to:
+- Add more detailed guidance
+- Include your specific environment details
+- Document your standards and preferences
+- Add troubleshooting for issues you've encountered
+
+## Architecture Benefits
+
+### Why Modular Skills?
+
+**Before (Monolithic)**:
+- Single large agent file with all knowledge
+- All expertise loaded for every question
+- Harder to maintain and extend
+- Mixed concerns in one place
+
+**After (Modular Skills)**:
+- Focused, maintainable skill files
+- Context-aware loading (only what's needed)
+- Easy to extend with new domains
+- Clear separation of concerns
+- Better organization and discoverability
+
+### Real-World Example
+
+**Task**: "Set up k3s cluster on Proxmox with VLAN segmentation"
+
+**Skills Engaged**:
+1. **proxmox**: Creating VMs for cluster nodes
+2. **virtual-machines**: Template and sizing guidance
+3. **kubernetes**: K3s installation and configuration
+4. **firewall**: VLAN design and rules
+5. **documentation**: Recording the setup
+
+**Orchestration**: The main agent coordinates these skills to provide integrated guidance that works across all domains.
 
 ## Examples
 
-### Example 1: K3s Cluster Setup
+### Example 1: Single-Skill Question
+
+**You**: "How do I pass through a GPU to a Proxmox VM?"
+
+**Agent Behavior**:
+- Loads **proxmox** skill
+- Provides PCI passthrough guidance
+- Explains IOMMU requirements
+- Notes homelab vs production considerations
+
+### Example 2: Multi-Skill Project
 
 **You**: "I want to set up a k3s cluster with 3 nodes on Proxmox VMs"
 
-**Agent**: Provides step-by-step guidance including:
-- VM specifications for homelab use
-- K3s installation commands
-- Network configuration
-- Storage setup options
-- Explains how production would differ
+**Agent Behavior**:
+- Loads **proxmox**, **kubernetes**, **virtual-machines**, **documentation** skills
+- Coordinates VM creation with cluster requirements
+- Provides integrated step-by-step guidance
+- Suggests documentation approach
+
+### Example 3: Network Security
+
+**You**: "Help me segment my IoT devices from my main network"
+
+**Agent Behavior**:
+- Loads **firewall** and **unifi** skills (if you have UniFi equipment)
+- Designs VLAN strategy
+- Configures switch and firewall rules
+- Explains security reasoning
 
 ### Example 2: Firewall Configuration
 
