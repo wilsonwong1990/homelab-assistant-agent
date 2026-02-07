@@ -261,27 +261,6 @@ Edit any skill file in `.github/skills/[skill-name]/SKILL.md` to:
 - Configures switch and firewall rules
 - Explains security reasoning
 
-### Example 2: Firewall Configuration
-
-**You**: "How should I configure firewall rules for my homelab?"
-
-**Agent**: Recommends:
-- Basic network segmentation for homelab
-- Essential security rules
-- Common services to expose/protect
-- VPN setup for remote access
-- Notes production-level requirements
-
-### Example 3: Documentation
-
-**You**: "Document the changes I made to my Unifi controller"
-
-**Agent**:
-- Creates structured documentation
-- Logs an issue in the appropriate repository
-- Cross-references related configurations
-- Updates the knowledge base
-
 ## Best Practices
 
 ### When to Use This Agent
