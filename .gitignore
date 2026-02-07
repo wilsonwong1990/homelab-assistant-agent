@@ -1,7 +1,6 @@
 # Temporary files
 *.tmp
 *.temp
-.DS_Store
 Thumbs.db
 
 # IDE files
@@ -24,7 +23,6 @@ logs/
 # Backup files
 *.bak
 *.backup
-*~
 
 # Test output
 test-output/
