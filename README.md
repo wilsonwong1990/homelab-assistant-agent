@@ -327,7 +327,3 @@ For issues or questions:
 - Open an issue in this repository
 - Check existing issues for similar questions
 - Refer to the documentation and examples
-
-## Acknowledgments
-
-Built for the homelab community, by the homelab community. Special thanks to all contributors who help make homelab infrastructure more accessible and manageable.
