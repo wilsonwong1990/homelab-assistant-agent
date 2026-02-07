@@ -135,7 +135,7 @@ The agent will automatically be available when working in Copilot Workspace on r
 
 ### Using repolist.md
 
-The `repolist.md` file tracks all repositories in your homelab ecosystem. Update it when you:
+The `repolist.private.md` file tracks all repositories in your homelab ecosystem. Update it when you:
 
 - Create new repositories for homelab work
 - Change repository purposes or structure
@@ -146,7 +146,7 @@ The `repolist.md` file tracks all repositories in your homelab ecosystem. Update
 
 The agent can log work as GitHub issues. For significant tasks:
 
-1. The agent identifies the appropriate repository from `repolist.md`
+1. The agent identifies the appropriate repository from `repolist.private.md`
 2. Creates an issue documenting the work
 3. Links related issues across repositories
 4. Updates documentation as needed
