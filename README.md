@@ -315,11 +315,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [pfSense Documentation](https://docs.netgate.com/pfsense/en/latest/)
 - [Unifi Documentation](https://help.ui.com/)
 
-### Related Projects
-
-- [Awesome Homelab](https://github.com/awesome-selfhosted/awesome-selfhosted)
-- [Homelab subreddit](https://reddit.com/r/homelab)
-- [Self-Hosted Podcast](https://selfhosted.show/)
 
 ## Support
 
