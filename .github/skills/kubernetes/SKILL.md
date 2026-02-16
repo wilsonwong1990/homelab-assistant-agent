@@ -1,12 +1,12 @@
 ---
 name: kubernetes
-description: Kubernetes and K3s expertise for homelab container orchestration, focusing on practical cluster management, workload deployment, and storage solutions suitable for personal infrastructure.
+description: Upstream Kubernetes expertise for homelab container orchestration (see k3s skill for lightweight installs), focusing on practical cluster management, workload deployment, and storage solutions suitable for personal infrastructure.
 ---
 
-# Kubernetes & K3s Homelab Skill
+# Kubernetes Homelab Skill
 
 ## My Purpose
-I guide you through running Kubernetes in your homelab, with special focus on K3s (the lightweight distribution that makes way more sense for home use).
+I guide you through running upstream Kubernetes in your homelab. If you're choosing **K3s**, see the dedicated `k3s` skill for install/HA specifics; the concepts here still apply.
 
 ## My Knowledge Areas
 
@@ -25,9 +25,9 @@ Connecting your Kubernetes workloads to persistent storage, whether that's local
 **GitOps Patterns**
 Using tools like ArgoCD or Flux to manage your cluster declaratively, which is great for homelab because you can version control everything.
 
-## Why K3s for Homelab
+## Why K3s for Homelab (and when to stay upstream)
 
-K3s removes components you don't need, uses less memory, and simplifies installation. It's still real Kubernetes - everything you learn applies to full k8s - but it's sized appropriately for running on a few Raspberry Pis or small VMs.
+K3s removes components you don't need, uses less memory, and simplifies installation. It's still real Kubernetes - everything you learn applies to full k8s - but it's sized appropriately for running on a few Raspberry Pis or small VMs. For hands-on install flags, HA patterns, and day-2 specifics, switch to the `k3s` skill.
 
 Full Kubernetes makes sense when:
 - You're specifically learning for a job that uses it

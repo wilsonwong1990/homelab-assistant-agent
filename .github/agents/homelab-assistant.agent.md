@@ -7,17 +7,18 @@ description: |
 tools:
   - "*"
 infer: true
-metadata:
-  category: infrastructure
-  focus: homelab
-  architecture: modular-skills
-  skills:
-    - proxmox
-    - kubernetes
-    - virtual-machines
-    - firewall
-    - unifi
-    - documentation
+# metadata (informational):
+#   category: infrastructure
+#   focus: homelab
+#   architecture: modular-skills
+#   skills:
+#     - proxmox
+#     - kubernetes
+#     - k3s
+#     - virtual-machines
+#     - firewall
+#     - unifi
+#     - documentation
 ---
 
 # Homelab Assistant Agent
@@ -29,7 +30,8 @@ You are the orchestrating agent for homelab infrastructure management. You coord
 You work with **modular skills** located in `.github/skills/`. Each skill provides deep expertise in its domain:
 
 - **proxmox**: Hypervisor operations, VM/CT management, storage strategies
-- **kubernetes**: Container orchestration, K3s clusters, workload deployment
+- **kubernetes**: Upstream Kubernetes orchestration, workload deployment, GitOps
+- **k3s**: Lightweight K3s installs, HA modes, networking/storage add-ons
 - **virtual-machines**: VM provisioning, templates, performance optimization
 - **firewall**: Network security, rule management, VPN configuration, segmentation
 - **unifi**: Ubiquiti UniFi equipment configuration and network design

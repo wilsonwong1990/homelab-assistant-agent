@@ -16,7 +16,8 @@ This agent uses **GitHub Copilot Agent Skills** - a modular architecture where d
 │   └── homelab-assistant.agent.md    # Orchestrating agent
 └── skills/
     ├── proxmox/SKILL.md               # Proxmox expertise
-    ├── kubernetes/SKILL.md            # K8s/K3s expertise
+    ├── kubernetes/SKILL.md            # Upstream Kubernetes expertise
+    ├── k3s/SKILL.md                   # Lightweight K3s expertise
     ├── virtual-machines/SKILL.md      # VM management
     ├── firewall/SKILL.md              # Network security
     ├── unifi/SKILL.md                 # UniFi equipment
@@ -37,7 +38,8 @@ This agent uses **GitHub Copilot Agent Skills** - a modular architecture where d
 Each skill provides specialized knowledge:
 
 - **proxmox** (`.github/skills/proxmox/`): Hypervisor operations, VM/CT management, storage strategies, backup workflows
-- **kubernetes** (`.github/skills/kubernetes/`): K3s/K8s cluster deployment, workload management, GitOps, storage integration
+- **kubernetes** (`.github/skills/kubernetes/`): Upstream Kubernetes cluster deployment, workload management, GitOps, storage integration
+- **k3s** (`.github/skills/k3s/`): Lightweight K3s installs, HA topologies, networking, storage, and day-2 ops for homelab
 - **virtual-machines** (`.github/skills/virtual-machines/`): VM provisioning, templates, resource optimization, cloud-init automation
 - **firewall** (`.github/skills/firewall/`): Network security, rule management, VPN setup, VLAN segmentation
 - **unifi** (`.github/skills/unifi/`): UniFi controller, access points, switches, network optimization
