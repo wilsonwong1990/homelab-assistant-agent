@@ -71,6 +71,56 @@ The main agent (`.github/agents/homelab-assistant.agent.md`) coordinates these s
 - GitHub Copilot subscription (Individual, Business, or Enterprise)
 - GitHub Copilot enabled in your development environment (VS Code, CLI, etc.)
 
+### MCP Server Setup
+
+This agent uses [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) servers to connect to your homelab infrastructure. The configuration lives in `.github/copilot/mcp.json`.
+
+**The committed config uses placeholder paths.** To use the MCP servers, update the paths for your local environment:
+
+1. **Proxmox MCP** ([wilsonwong1990/proxmox-mcp](https://github.com/wilsonwong1990/proxmox-mcp)):
+   ```bash
+   # Clone and build
+   git clone https://github.com/wilsonwong1990/proxmox-mcp.git
+   cd proxmox-mcp && npm install && npm run build
+
+   # Add to ~/.zshrc (or ~/.bashrc)
+   export PROXMOX_HOST="https://your-proxmox-host:8006"
+   export PROXMOX_TOKEN_ID="user@pam!token-name"
+   export PROXMOX_TOKEN_SECRET="your-token-secret"
+   export PROXMOX_ALLOW_SELF_SIGNED="true"
+   export PROXMOX_READ_ONLY="true"
+   ```
+
+2. **UniFi Network MCP** ([sirkirby/unifi-mcp](https://github.com/sirkirby/unifi-mcp)):
+   ```bash
+   # Install uv (Python package runner)
+   curl -LsSf https://astral.sh/uv/install.sh | sh
+
+   # Add to ~/.zshrc (or ~/.bashrc)
+   export UNIFI_HOST="your-unifi-controller-ip"
+   export UNIFI_USERNAME="your-local-admin-username"
+   export UNIFI_PASSWORD="your-admin-password"
+   export UNIFI_VERIFY_SSL="false"
+   ```
+
+3. **Update `.github/copilot/mcp.json`** with your local paths:
+   ```json
+   {
+     "mcpServers": {
+       "proxmox-mcp": {
+         "command": "node",
+         "args": ["/your/path/to/proxmox-mcp/dist/index.js"]
+       },
+       "unifi-network": {
+         "command": "/your/path/to/uvx",
+         "args": ["unifi-network-mcp"]
+       }
+     }
+   }
+   ```
+
+   > **Note:** Use absolute paths. Find `uvx` with `which uvx` after installing `uv`. Credentials are sourced from shell environment variables — never commit secrets to this file.
+
 ### Setup
 
 1. **Clone this repository** (if creating a new homelab agent):

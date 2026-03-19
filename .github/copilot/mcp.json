@@ -2,10 +2,10 @@
   "mcpServers": {
     "proxmox-mcp": {
       "command": "node",
-      "args": ["/Users/wilsonwong/git/proxmox-mcp/dist/index.js"]
+      "args": ["/path/to/proxmox-mcp/dist/index.js"]
     },
     "unifi-network": {
-      "command": "/Users/wilsonwong/.local/bin/uvx",
+      "command": "uvx",
       "args": ["unifi-network-mcp"]
     }
   }
