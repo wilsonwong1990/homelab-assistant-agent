@@ -30,3 +30,6 @@ coverage/
 
 #Private repolist
 *.private.md
+
+# MCP config (contains local paths — use mcp.json.example as template)
+.github/copilot/mcp.json

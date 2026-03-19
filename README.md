@@ -103,20 +103,10 @@ This agent uses [MCP (Model Context Protocol)](https://modelcontextprotocol.io/)
    export UNIFI_VERIFY_SSL="false"
    ```
 
-3. **Update `.github/copilot/mcp.json`** with your local paths:
-   ```json
-   {
-     "mcpServers": {
-       "proxmox-mcp": {
-         "command": "node",
-         "args": ["/your/path/to/proxmox-mcp/dist/index.js"]
-       },
-       "unifi-network": {
-         "command": "/your/path/to/uvx",
-         "args": ["unifi-network-mcp"]
-       }
-     }
-   }
+3. **Set up MCP config** from the example template:
+   ```bash
+   cp .github/copilot/mcp.json.example .github/copilot/mcp.json
+   # Edit mcp.json with your local paths (this file is gitignored)
    ```
 
    > **Note:** Use absolute paths. Find `uvx` with `which uvx` after installing `uv`. Credentials are sourced from shell environment variables — never commit secrets to this file.
