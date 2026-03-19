@@ -5,7 +5,7 @@
       "args": ["/Users/wilsonwong/git/proxmox-mcp/dist/index.js"]
     },
     "unifi-network": {
-      "command": "uvx",
+      "command": "/Users/wilsonwong/.local/bin/uvx",
       "args": ["unifi-network-mcp"]
     }
   }
