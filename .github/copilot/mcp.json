@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "proxmox-mcp": {
+      "command": "node",
+      "args": ["/Users/wilsonwong/git/proxmox-mcp/dist/index.js"]
+    }
+  }
+}
