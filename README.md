@@ -65,7 +65,7 @@ The main agent (`.github/agents/homelab-assistant.agent.md`) coordinates these s
          ┌──────────────────────┐
          │    Orchestrator      │
          │  Classify → Dispatch │
-         │  → Integrate → Plan  │
+         │  → Plan/Integrate/QA │
          └──────┬───────────────┘
                 │
     Phase 1: Discovery (parallel)

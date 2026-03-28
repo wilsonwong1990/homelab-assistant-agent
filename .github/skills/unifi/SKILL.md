@@ -235,12 +235,12 @@ When dispatched as a subagent by the orchestrator:
 - `unifi-network-unifi_batch_status` — Check status of batch operations
 
 **Investigation Workflow:**
-1. Call `unifi_tool_index` to discover available tools
+1. Call `unifi-network-unifi_tool_index` to discover available tools
 2. Use the discovered tools to gather network state
-3. Use `unifi_batch` when you need to query multiple things simultaneously
+3. Use `unifi-network-unifi_batch` when you need to query multiple things simultaneously
 
 **Investigation Checklist:**
-1. Discover available tools via `unifi_tool_index`
+1. Discover available tools via `unifi-network-unifi_tool_index`
 2. List all network devices (switches, APs, gateways) — note models, firmware, status
 3. List current networks/VLANs — IDs, subnets, purposes
 4. Review port profiles and their assignments

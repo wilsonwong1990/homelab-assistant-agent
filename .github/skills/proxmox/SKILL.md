@@ -102,7 +102,7 @@ When dispatched as a subagent by the orchestrator:
 - `proxmox-mcp-pve_get_nodes_lxc_config` — Container configuration
 
 **Investigation Checklist:**
-1. List all nodes with `pve_list_nodes`, then get status for each
+1. List all nodes with `proxmox-mcp-pve_list_nodes`, then get status for each
 2. For each node, query storage pools — note types, total/used/available
 3. Inventory existing VMs and containers with their resource allocations
 4. Calculate available headroom (total capacity minus allocated)
