@@ -8,28 +8,33 @@ The Homelab Assistant Agent is designed to help you manage and optimize your hom
 
 ### Modular Architecture
 
-This agent uses **GitHub Copilot Agent Skills** - a modular architecture where domain expertise is separated into focused, reusable skills. Each skill is loaded contextually based on your needs:
+This agent uses a **hybrid architecture** combining GitHub Copilot Agent Skills with a subagent dispatch pattern:
 
 ```
 .github/
 ├── agents/
 │   └── homelab-assistant.agent.md    # Orchestrating agent
 └── skills/
-    ├── proxmox/SKILL.md               # Proxmox expertise
+    ├── proxmox/SKILL.md               # Proxmox expertise      ← subagent-capable
     ├── kubernetes/SKILL.md            # Upstream Kubernetes expertise
-    ├── k3s/SKILL.md                   # Lightweight K3s expertise
+    ├── k3s/SKILL.md                   # Lightweight K3s expertise ← subagent-capable
     ├── virtual-machines/SKILL.md      # VM management
-    ├── firewall/SKILL.md              # Network security
-    ├── unifi/SKILL.md                 # UniFi equipment
+    ├── firewall/SKILL.md              # Network security        ← subagent-capable
+    ├── unifi/SKILL.md                 # UniFi equipment         ← subagent-capable
     ├── documentation/SKILL.md         # Documentation practices
-    └── ELK/SKILL.md                   # Elastic Stack observability
+    ├── ELK/SKILL.md                   # Elastic Stack observability
+    └── qa/SKILL.md                    # Quality gate validation  ← subagent-capable
 ```
 
+**Two modes of operation:**
+- **Skills as context**: For single-domain questions, skill knowledge loads into the agent's context (fast, simple)
+- **Subagent dispatch**: For multi-domain projects, the orchestrator dispatches focused subagents that investigate and plan in parallel, then integrates their results
+
 **Benefits:**
-- **Context-aware**: Skills load only when relevant to your task
-- **Maintainable**: Update individual skills independently
-- **Extensible**: Add new skills without modifying the core agent
-- **Focused**: Each skill provides deep expertise in its domain
+- **Parallel execution**: Query Proxmox and UniFi infrastructure simultaneously
+- **Focused context**: Each subagent reasons deeply in its domain without context crowding
+- **Cross-domain integration**: Orchestrator catches dependencies other agents can't see
+- **Graceful degradation**: Falls back to sequential skill-as-context when dispatch isn't available
 
 ## Features
 
@@ -45,15 +50,69 @@ Each skill provides specialized knowledge:
 - **unifi** (`.github/skills/unifi/`): UniFi controller, access points, switches, network optimization
 - **documentation** (`.github/skills/documentation/`): Note-taking, runbooks, knowledge management, issue tracking
 - **ELK** (`.github/skills/ELK/`): Elastic Stack logging, metrics, tracing, dashboards, alerting for homelab observability
+- **QA** (`.github/skills/qa/`): Quality gate that validates integrated plans for cross-domain consistency, safety, and completeness before execution
 
 ### Orchestrating Agent
 
-The main agent (`.github/agents/homelab-assistant.agent.md`) coordinates these skills:
-- Understands your overall goal
-- Identifies which skills are relevant
-- Coordinates multi-domain tasks
-- Provides integrated, coherent guidance
-- Maintains homelab context across domains
+The main agent (`.github/agents/homelab-assistant.agent.md`) coordinates these skills using a **phased execution model**:
+
+**For single-domain questions** (e.g., "How do I passthrough a GPU?"):
+- Loads the relevant skill as context and answers directly
+
+**For multi-domain projects** (e.g., "Build a Proxmox cluster for k3s + Longhorn"):
+
+```
+         ┌──────────────────────┐
+         │    Orchestrator      │
+         │  Classify → Dispatch │
+         │  → Integrate → Plan  │
+         └──────┬───────────────┘
+                │
+    Phase 1: Discovery (parallel)
+    ┌───────────┼───────────────┐
+    │           │               │
+    ▼           ▼               │
+┌────────┐ ┌────────┐          │
+│Proxmox │ │ UniFi  │          │
+│  MCP   │ │  MCP   │          │
+│ query  │ │ query  │          │
+└───┬────┘ └───┬────┘          │
+    │          │               │
+    Phase 2: Planning (parallel, with Phase 1 results)
+    ┌──────────┼───────────────┐
+    │          │               │
+    ▼          ▼               ▼
+┌────────┐ ┌────────┐  ┌──────────┐
+│  K3s   │ │Firewall│  │ Context: │
+│cluster │ │  VLAN  │  │ VMs, k8s │
+│  plan  │ │  plan  │  │ docs,ELK │
+└───┬────┘ └───┬────┘  └────┬─────┘
+    │          │             │
+    Phase 3: Integration (orchestrator)
+    └──────────┴─────────────┘
+              │
+    ┌─────────▼──────────┐
+    │ Integrated Plan    │
+    └─────────┬──────────┘
+              │
+    Phase 4: Quality Gate
+    ┌─────────▼──────────┐
+    │   QA subagent      │
+    │ validates plan for │
+    │ consistency,safety │
+    └─────────┬──────────┘
+              │
+    ┌─────────▼──────────┐
+    │  Final Plan with   │
+    │  QA-verified steps │
+    └────────────────────┘
+```
+
+- Classifies the task scope (single vs multi-domain)
+- Dispatches focused subagents for domain-specific investigation and planning
+- Integrates results, catching cross-domain dependencies
+- Dispatches QA subagent to validate the integrated plan before delivery
+- Presents a coherent, sequenced, QA-validated implementation plan
 
 ### Key Capabilities
 
@@ -245,7 +304,7 @@ Edit any skill file in `.github/skills/[skill-name]/SKILL.md` to:
 
 ## Architecture Benefits
 
-### Why Modular Skills?
+### Why Hybrid Skills + Subagents?
 
 **Before (Monolithic)**:
 - Single large agent file with all knowledge
@@ -258,20 +317,61 @@ Edit any skill file in `.github/skills/[skill-name]/SKILL.md` to:
 - Context-aware loading (only what's needed)
 - Easy to extend with new domains
 - Clear separation of concerns
-- Better organization and discoverability
+
+**Now (Hybrid Subagent Architecture)**:
+- Skills serve dual purpose: context modules AND dispatchable subagents
+- Multi-domain tasks execute in parallel instead of serially
+- Each subagent gets a clean, focused context window
+- Orchestrator focuses on cross-domain integration — its unique value
+- Falls back gracefully to context-only mode when dispatch isn't available
+
+### Subagent-Capable Skills
+
+| Skill | MCP Backend | Subagent Capability |
+|-------|-------------|---------------------|
+| **Proxmox** | proxmox-mcp (read-only) | Queries real node/storage/VM state |
+| **UniFi** | unifi-network | Queries real switch/VLAN/device state |
+| **K3s** | — | Deep cluster topology and sizing planning |
+| **Firewall** | — | Independent VLAN/rules design with security matrix |
+| **QA** | — | Validates integrated plans before execution |
+
+### Context-Only Skills
+
+| Skill | Purpose |
+|-------|---------|
+| **Kubernetes** | Upstream concepts (K3s handles specifics) |
+| **Virtual Machines** | VM sizing and lifecycle knowledge |
+| **Documentation** | Cross-cutting documentation practices |
+| **ELK** | Observability layer (post-infrastructure) |
 
 ### Real-World Example
 
 **Task**: "Set up k3s cluster on Proxmox with VLAN segmentation"
 
-**Skills Engaged**:
-1. **proxmox**: Creating VMs for cluster nodes
-2. **virtual-machines**: Template and sizing guidance
-3. **kubernetes**: K3s installation and configuration
-4. **firewall**: VLAN design and rules
-5. **documentation**: Recording the setup
+**Orchestrator classifies**: Multi-domain → phased execution
 
-**Orchestration**: The main agent coordinates these skills to provide integrated guidance that works across all domains.
+**Phase 1 — Discovery (parallel dispatch):**
+- Proxmox subagent queries MCP → reports: 2 nodes, 32GB RAM each, local-lvm + NFS storage, 4 existing VMs
+- UniFi subagent queries MCP → reports: USW-Pro-48, VLANs 1/10/20 in use, 30 ports available
+
+**Phase 2 — Planning (parallel dispatch with Phase 1 results):**
+- K3s subagent → recommends: 3 dual-role nodes, 4 vCPU / 8GB RAM each, Longhorn with dedicated 100GB disk, MetalLB range 10.0.20.100-150
+- Firewall subagent → recommends: VLAN 30 for k3s inter-node, VLAN 40 for Longhorn replication, firewall rule matrix for all flows
+
+**Phase 3 — Integration (orchestrator):**
+- Maps K3s network requirements to specific VLAN IDs
+- Distributes VMs across Proxmox nodes (2 on node1, 1 on node2)
+- Designs Linux bridges on Proxmox nodes for new VLANs
+- Configures UniFi switch trunk ports for Proxmox uplinks
+- Sequences implementation: VLANs first → bridges → VMs → k3s install → Longhorn
+
+**Skills Engaged**:
+1. **proxmox** (subagent): Queried infrastructure, created VM plan
+2. **virtual-machines** (context): Informed VM sizing decisions
+3. **k3s** (subagent): Designed cluster topology and requirements
+4. **firewall** (subagent): Designed network segmentation
+5. **unifi** (subagent): Queried and planned switch configuration
+6. **documentation** (context): Structured the output plan
 
 ## Examples
 

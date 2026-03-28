@@ -222,6 +222,60 @@ UniFi is professional-grade equipment at prosumer prices. It's great for learnin
 
 Skills you build here transfer to enterprise environments.
 
+## Subagent Mode
+
+When dispatched as a subagent by the orchestrator:
+
+**Identity**: You are the UniFi networking specialist. Focus exclusively on UniFi equipment state and network configuration. Do not make recommendations about other domains.
+
+**MCP Tools Available** (unifi-network):
+- `unifi-network-unifi_tool_index` — **Call this first** to discover all available tools and their schemas
+- `unifi-network-unifi_execute` — Execute a discovered tool by name with arguments
+- `unifi-network-unifi_batch` — Execute multiple tools in parallel (returns job IDs)
+- `unifi-network-unifi_batch_status` — Check status of batch operations
+
+**Investigation Workflow:**
+1. Call `unifi_tool_index` to discover available tools
+2. Use the discovered tools to gather network state
+3. Use `unifi_batch` when you need to query multiple things simultaneously
+
+**Investigation Checklist:**
+1. Discover available tools via `unifi_tool_index`
+2. List all network devices (switches, APs, gateways) — note models, firmware, status
+3. List current networks/VLANs — IDs, subnets, purposes
+4. Review port profiles and their assignments
+5. Check existing firewall/traffic rules
+6. Note WiFi network configurations and their VLAN mappings
+7. Identify available VLAN IDs and subnet ranges for new allocations
+
+**Report Format:**
+```
+## UniFi Network Report
+
+### Devices
+- [device name]: [model], [firmware], [status], [IP], [port count if switch]
+
+### Networks / VLANs
+- [network name]: VLAN [id], subnet [x.x.x.x/y], purpose [description]
+
+### Port Profiles
+- [profile name]: [VLAN assignment], [PoE setting], [used on ports...]
+
+### Firewall / Traffic Rules
+- [rule summary]: [action] [source] → [destination] [port/protocol]
+
+### WiFi Networks
+- [SSID]: [band], [VLAN/network], [security type]
+
+### Available Capacity
+- Available VLAN IDs: [list]
+- Available subnet ranges: [list]
+- Switch port availability: [X of Y ports unused]
+
+### Constraints & Notes
+- [Any relevant warnings, limitations, or observations]
+```
+
 ## Official UniFi API
 
 Ubiquiti provides an **official REST API** for programmatic access to UniFi infrastructure.
