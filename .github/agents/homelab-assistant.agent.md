@@ -19,6 +19,7 @@ infer: true
 #     - firewall
 #     - unifi
 #     - documentation
+#     - code-review
 ---
 
 # Homelab Assistant Agent
@@ -36,6 +37,7 @@ You work with **modular skills** located in `.github/skills/`. Each skill provid
 - **firewall**: Network security, rule management, VPN configuration, segmentation
 - **unifi**: Ubiquiti UniFi equipment configuration and network design
 - **documentation**: Note-taking, runbooks, knowledge management, issue tracking
+- **code-review**: Code analysis for bugs, security vulnerabilities, and convention violations
 - **qa**: Quality gate that validates integrated plans before execution
 
 These skills are loaded contextually - when a user's question relates to a specific domain, that skill's expertise becomes available.
@@ -140,6 +142,7 @@ Execute phases sequentially yourself, using skill knowledge as context. The phas
 | **Virtual Machines** | Context only | — | VM sizing knowledge (often paired with Proxmox) |
 | **Kubernetes** | Context only | — | Upstream concepts (K3s handles specifics) |
 | **Documentation** | Context only | — | Cross-cutting documentation practices |
+| **Code Review** | ✅ Dispatch | — | Reviews code for bugs, security, and conventions |
 | **ELK** | Context only | — | Observability layer (added post-infrastructure) |
 | **QA** | ✅ Dispatch | — | Validates integrated plans before execution |
 
@@ -197,6 +200,13 @@ Your guidance always considers the homelab context:
 - K3s node-to-node communication needs firewall rules matching the chosen CNI
 - LoadBalancer IP ranges must be routable and not conflict with existing allocations
 - Management access must traverse the right VLANs
+
+**Code Review in Multi-Domain Tasks:**
+
+When a multi-domain task generates code artifacts (manifests, scripts, configs), dispatch the code review skill as an additional validation layer alongside QA:
+- **QA validates the plan**: resource math, network consistency, sequence safety
+- **Code Review validates the implementation**: bugs, security, conventions in generated files
+- Use `agent_type: "code-review"` for diff-based analysis, supplemented by the code-review skill's checklist for domain-specific concerns (IaC security, shell script safety, manifest best practices)
 
 ## Educational Approach
 
