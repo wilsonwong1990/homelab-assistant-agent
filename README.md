@@ -1,6 +1,6 @@
 # Homelab Assistant Agent
 
-A specialized GitHub Copilot Agent for homelab infrastructure and operations. This agent uses a **modular skills architecture** to provide expert guidance on Proxmox, Kubernetes (k8s/k3s), virtual machines, firewalls, Ubiquiti Unifi, Elastic (ELK) observability, and documentation management.
+A specialized GitHub Copilot Agent for homelab infrastructure and operations. This agent uses a **modular skills architecture** to provide expert guidance on Proxmox, Kubernetes (k8s/k3s), virtual machines, firewalls, Ubiquiti Unifi, Elastic (ELK) observability, code review, and documentation management.
 
 ## Overview
 
@@ -22,6 +22,7 @@ This agent uses a **hybrid architecture** combining GitHub Copilot Agent Skills 
     ├── firewall/SKILL.md              # Network security        ← subagent-capable
     ├── unifi/SKILL.md                 # UniFi equipment         ← subagent-capable
     ├── documentation/SKILL.md         # Documentation practices
+    ├── code-review/SKILL.md           # Code review & security    ← subagent-capable
     ├── ELK/SKILL.md                   # Elastic Stack observability
     └── qa/SKILL.md                    # Quality gate validation  ← subagent-capable
 ```
@@ -50,6 +51,7 @@ Each skill provides specialized knowledge:
 - **unifi** (`.github/skills/unifi/`): UniFi controller, access points, switches, network optimization
 - **documentation** (`.github/skills/documentation/`): Note-taking, runbooks, knowledge management, issue tracking
 - **ELK** (`.github/skills/ELK/`): Elastic Stack logging, metrics, tracing, dashboards, alerting for homelab observability
+- **Code Review** (`.github/skills/code-review/`): Code analysis for bugs, security vulnerabilities, and convention violations across any language or repo
 - **QA** (`.github/skills/qa/`): Quality gate that validates integrated plans for cross-domain consistency, safety, and completeness before execution
 
 ### Orchestrating Agent
@@ -333,6 +335,7 @@ Edit any skill file in `.github/skills/[skill-name]/SKILL.md` to:
 | **UniFi** | unifi-network | Queries real switch/VLAN/device state |
 | **K3s** | — | Deep cluster topology and sizing planning |
 | **Firewall** | — | Independent VLAN/rules design with security matrix |
+| **Code Review** | — | Analyzes code for bugs, security vulnerabilities, and conventions |
 | **QA** | — | Validates integrated plans before execution |
 
 ### Context-Only Skills
