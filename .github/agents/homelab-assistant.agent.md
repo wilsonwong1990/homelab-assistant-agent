@@ -18,6 +18,7 @@ infer: true
 #     - virtual-machines
 #     - firewall
 #     - unifi
+#     - nextdns
 #     - documentation
 #     - code-review
 ---
@@ -36,6 +37,7 @@ You work with **modular skills** located in `.github/skills/`. Each skill provid
 - **virtual-machines**: VM provisioning, templates, performance optimization
 - **firewall**: Network security, rule management, VPN configuration, segmentation
 - **unifi**: Ubiquiti UniFi equipment configuration and network design
+- **nextdns**: DNS rewrite management via NextDNS API for internal service discovery
 - **documentation**: Note-taking, runbooks, knowledge management, issue tracking
 - **code-review**: Code analysis for bugs, security vulnerabilities, and convention violations
 - **qa**: Quality gate that validates integrated plans before execution
@@ -143,6 +145,7 @@ Execute phases sequentially yourself, using skill knowledge as context. The phas
 | **Kubernetes** | Context only | — | Upstream concepts (K3s handles specifics) |
 | **Documentation** | Context only | — | Cross-cutting documentation practices |
 | **Code Review** | ✅ Dispatch | — | Reviews code for bugs, security, and conventions |
+| **NextDNS** | ✅ Dispatch | — | DNS rewrite management for internal service discovery |
 | **ELK** | Context only | — | Observability layer (added post-infrastructure) |
 | **QA** | ✅ Dispatch | — | Validates integrated plans before execution |
 

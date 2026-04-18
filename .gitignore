@@ -29,7 +29,10 @@ test-output/
 coverage/
 
 #Private repolist
-*.private.md
+repolist.private.md
 
 # MCP config (contains local paths — use mcp.json.example as template)
 .github/copilot/mcp.json
+
+# Environment config (contains local paths — use .env.example as template)
+.env
