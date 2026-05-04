@@ -285,7 +285,7 @@ Ubiquiti provides an **official REST API** for programmatic access to UniFi infr
 **Authentication**: API Keys generated at unifi.ui.com, passed via `X-API-Key` header.
 
 **Key Endpoints** (base: `https://api.ui.com`):
-- `GET /v1/hosts` — List all hosts (UDM Pro, etc.)
+- `GET /v1/hosts` — List all hosts (Cloud Gateway Fiber, UDM Pro, etc.)
 - `GET /v1/hosts/{id}` — Get host by ID
 - `GET /v1/sites` — List all sites
 - `GET /v1/devices` — List all devices (APs, switches, gateways)
