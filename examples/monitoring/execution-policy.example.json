@@ -1,0 +1,13 @@
+{
+  "enabled": false,
+  "discord": {
+    "allowed_user_ids": ["REPLACE_NUMERIC_USER_ID"],
+    "guild_id": "REPLACE_NUMERIC_GUILD_ID",
+    "channel_id": "REPLACE_NUMERIC_CHANNEL_ID"
+  },
+  "github": {
+    "repository": "REPLACE_OWNER/REPLACE_INFRA_REPOSITORY",
+    "allowed_user_ids": ["REPLACE_NUMERIC_GITHUB_USER_ID"]
+  },
+  "runbooks": {}
+}

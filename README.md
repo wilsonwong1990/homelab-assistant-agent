@@ -39,6 +39,19 @@ This agent uses a **hybrid architecture** combining GitHub Copilot Agent Skills 
 
 ## Features
 
+### Always-on local monitoring (pilot)
+
+The [monitoring companion](examples/monitoring/README.md) adds Proxmox/UniFi
+availability checks, selected Home Assistant entity checks, persistent Discord
+alerts, and bounded local Ollama investigation. Hermes or another MCP client can
+read the same incident state and reuse the canonical skills.
+
+Execution is disabled by default. The hybrid policy permits exact Discord
+approval only for preapproved low-risk runbooks; configuration and higher-impact
+changes require GitHub GitOps/IssueOps authorization. A separate restricted
+executor enforces permissions, proposal expiry, replay prevention, and audit.
+The pilot supplies code and deployment examples, not an already-running service.
+
 ### Modular Skills
 
 Each skill provides specialized knowledge:
@@ -53,6 +66,7 @@ Each skill provides specialized knowledge:
 - **ELK** (`.github/skills/ELK/`): Elastic Stack logging, metrics, tracing, dashboards, alerting for homelab observability
 - **Code Review** (`.github/skills/code-review/`): Code analysis for bugs, security vulnerabilities, and convention violations across any language or repo
 - **QA** (`.github/skills/qa/`): Quality gate that validates integrated plans for cross-domain consistency, safety, and completeness before execution
+- **monitoring** (`.github/skills/monitoring/`): Local-first incident triage and hybrid Discord/GitHub change authorization shared across runtimes
 
 ### Orchestrating Agent
 

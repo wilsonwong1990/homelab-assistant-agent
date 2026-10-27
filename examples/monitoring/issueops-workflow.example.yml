@@ -1,0 +1,38 @@
+# Install only through a reviewed PR in the owning infrastructure repository.
+# The executor must be separately configured for that exact repository.
+name: Approved homelab runbook
+on:
+  issue_comment:
+    types: [created]
+permissions:
+  contents: read
+  issues: read
+jobs:
+  relay:
+    if: >-
+      !github.event.issue.pull_request &&
+      startsWith(github.event.comment.body, 'approve ')
+    runs-on: [self-hosted, homelab-issueops]
+    timeout-minutes: 2
+    steps:
+      # No checkout or execution of PR/issue-supplied code.
+      # The installed client and executor are deployed through protected GitOps.
+      - name: Relay approval reference to local policy executor
+        env:
+          APPROVAL_BODY: ${{ github.event.comment.body }}
+          APPROVAL_COMMENT_ID: ${{ github.event.comment.id }}
+        shell: bash
+        run: |
+          /opt/homelab-monitor/.venv/bin/python - <<'PY'
+          import os
+          import re
+          import subprocess
+          match = re.fullmatch(r"approve ([a-f0-9]{32}) ([a-f0-9]{64})", os.environ["APPROVAL_BODY"].strip())
+          if match is None:
+              raise SystemExit("Invalid approval syntax")
+          subprocess.run([
+              "/opt/homelab-monitor/.venv/bin/python", "-m", "homelab_monitor",
+              "--socket", "/run/homelab-executor/control.sock", "approve-github",
+              match[1], match[2], os.environ["APPROVAL_COMMENT_ID"],
+          ], check=True, timeout=65)
+          PY

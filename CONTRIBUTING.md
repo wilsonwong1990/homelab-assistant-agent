@@ -77,6 +77,12 @@ Add or improve expertise in specific domains:
 
 When modifying the agent:
 
+For the executable monitoring companion, run
+`python3 -m unittest discover -s tests -v`. Keep external APIs and infrastructure
+side effects isolated behind fixtures/mocks; never run real remediation as a
+unit test. See [the monitoring guide](examples/monitoring/README.md) for deployment
+acceptance checks and the hybrid authorization contract.
+
 1. Test with actual homelab scenarios
 2. Verify the agent provides helpful, accurate guidance
 3. Check that examples work as described

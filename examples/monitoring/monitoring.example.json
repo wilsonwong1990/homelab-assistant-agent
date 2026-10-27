@@ -1,0 +1,46 @@
+{
+  "interval": 60,
+  "retention_days": 30,
+  "model": {
+    "url": "http://127.0.0.1:11434",
+    "name": "qwen3:4b",
+    "timeout": 120
+  },
+  "checks": [
+    {
+      "id": "proxmox",
+      "kind": "proxmox",
+      "url": "https://proxmox.example.internal:8006/api2/json/nodes",
+      "headers_env": {"Authorization": "PROXMOX_AUTHORIZATION"},
+      "expected_online": ["replace-with-expected-running-node"],
+      "severity": "critical",
+      "failures": 2,
+      "recoveries": 2
+    },
+    {
+      "id": "unifi",
+      "kind": "unifi",
+      "url": "https://unifi.example.internal/proxy/network/integration/v1/sites/REPLACE_SITE_UUID/devices",
+      "headers_env": {"X-API-KEY": "UNIFI_READ_API_KEY"},
+      "expected_online": ["replace-with-integration-device-uuid"],
+      "severity": "critical"
+    },
+    {
+      "id": "ha-health",
+      "kind": "http",
+      "url": "https://ha.example.internal/api/",
+      "headers_env": {"Authorization": "HA_AUTHORIZATION"},
+      "severity": "critical"
+    },
+    {
+      "id": "ha-example-entity",
+      "kind": "home_assistant",
+      "url": "https://ha.example.internal/api/states/sensor.example_battery",
+      "entity": "sensor.example_battery",
+      "headers_env": {"Authorization": "HA_AUTHORIZATION"},
+      "depends_on": ["ha-health"],
+      "failures": 3,
+      "recoveries": 2
+    }
+  ]
+}

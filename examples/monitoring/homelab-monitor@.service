@@ -1,0 +1,23 @@
+[Unit]
+Description=Homelab monitoring component (%i)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=homelab-monitor
+Group=homelab-observe
+WorkingDirectory=/opt/homelab-monitor
+EnvironmentFile=/etc/homelab-monitor/%i.env
+ExecStart=/opt/homelab-monitor/.venv/bin/python -m homelab_monitor --db /var/lib/homelab-monitor/monitor.db --config /etc/homelab-monitor/monitoring.json %i
+Restart=on-failure
+RestartSec=10
+UMask=0027
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/homelab-monitor
+
+[Install]
+WantedBy=multi-user.target
