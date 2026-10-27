@@ -161,6 +161,8 @@ sudo /opt/homelab-monitor/examples/monitoring/deploy/install.sh --source "$PWD"
 sudo /opt/homelab-monitor/examples/monitoring/deploy/smoke-test.sh
 ```
 
+ISO installs point `origin` at the upstream GitHub repository; if you build images from a fork, run `sudo git -C /opt/homelab-monitor-src remote set-url origin <your-fork-url>` first.
+
 Each commit becomes a new release directory. The configuration is validated
 with the new code *before* switching, and the state databases are backed up to
 `/var/backups/homelab-monitor/`. Running services are restarted after the

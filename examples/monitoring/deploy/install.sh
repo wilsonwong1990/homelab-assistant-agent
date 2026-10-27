@@ -238,12 +238,15 @@ switch_release() {
   [[ -L "$PREFIX" ]] && current="$(readlink -f "$PREFIX")"
   if [[ "$current" == "$RELEASE_DIR" ]]; then
     log "release $RELEASE_ID already current"
+    install_units
     return
   fi
   [[ -n "$current" ]] && printf '%s\n' "$current" > "$RELEASES/.previous"
   ln -sfn "$RELEASE_DIR" "$PREFIX.new"
   mv -T "$PREFIX.new" "$PREFIX"
   log "switched $PREFIX -> $RELEASE_DIR"
+  # Units are installed only after the switch so they always match the live code.
+  install_units
   local unit
   for unit in "${ALL_UNITS[@]}"; do
     systemctl try-restart "$unit" || warn "restart of $unit failed; inspect journalctl -u $unit"
@@ -334,7 +337,6 @@ create_directories
 resolve_release
 build_release
 install_configuration
-install_units
 validate_release
 backup_state
 switch_release

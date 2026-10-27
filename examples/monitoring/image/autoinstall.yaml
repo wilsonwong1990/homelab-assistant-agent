@@ -31,6 +31,8 @@ autoinstall:
     - cp /cdrom/homelab/homelab-assistant-agent.bundle /target/root/homelab-assistant-agent.bundle
     - cp /cdrom/homelab/ref /target/root/homelab-ref
     - curtin in-target -- sh -c 'git clone --quiet --no-checkout /root/homelab-assistant-agent.bundle /opt/homelab-monitor-src && git -C /opt/homelab-monitor-src checkout --quiet --detach "$(cat /root/homelab-ref)"'
+    # The bundle is deleted below; point origin at upstream so DEPLOY.md upgrades work. Change for forks.
+    - curtin in-target -- git -C /opt/homelab-monitor-src remote set-url origin https://github.com/wilsonwong1990/homelab-assistant-agent.git
     - curtin in-target -- chown -R root:root /opt/homelab-monitor-src
     - curtin in-target -- install -m 0644 /opt/homelab-monitor-src/examples/monitoring/image/homelab-firstboot.service /etc/systemd/system/homelab-firstboot.service
     - curtin in-target -- systemctl enable homelab-firstboot.service
