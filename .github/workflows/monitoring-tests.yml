@@ -62,4 +62,4 @@ jobs:
           sudo examples/monitoring/deploy/smoke-test.sh
       - name: Service logs
         if: failure()
-        run: sudo journalctl -u 'homelab-monitor@*' --no-pager -n 100
+        run: sudo journalctl -u 'homelab-monitor@*' -u ollama --no-pager -n 100 || true

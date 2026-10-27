@@ -4,6 +4,7 @@
 # secrets, never enables execution, and never writes sudoers.
 # See examples/monitoring/DEPLOY.md.
 set -euo pipefail
+umask 022
 
 PREFIX=/opt/homelab-monitor
 RELEASES=/opt/homelab-monitor-releases
@@ -160,6 +161,7 @@ build_release() {
   chown -R root:root "$RELEASE_DIR"
   chmod -R u+rwX,go+rX,go-w "$RELEASE_DIR"
   date -u +%Y-%m-%dT%H:%M:%SZ > "$RELEASE_DIR/.install-complete"
+  chmod 0644 "$RELEASE_DIR/.install-complete"
 }
 
 install_if_absent() {

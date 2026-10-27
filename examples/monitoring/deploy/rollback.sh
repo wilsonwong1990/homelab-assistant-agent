@@ -2,6 +2,7 @@
 # Switch /opt/homelab-monitor back to the previous (or a named) release and
 # restart running components. Configuration and secrets are not touched.
 set -euo pipefail
+umask 022
 
 PREFIX=/opt/homelab-monitor
 RELEASES=/opt/homelab-monitor-releases
