@@ -54,7 +54,7 @@ jobs:
           git -c user.name=ci -c user.email=ci@example.invalid commit --allow-empty -qm "ci: second release"
           sudo examples/monitoring/deploy/install.sh
           test "$(readlink -f /opt/homelab-monitor)" != "$first"
-          ls /var/backups/homelab-monitor/monitor-*.db
+          sudo sh -c 'ls /var/backups/homelab-monitor/monitor-*.db'
           sudo examples/monitoring/deploy/rollback.sh --list
           sudo examples/monitoring/deploy/rollback.sh
           test "$(readlink -f /opt/homelab-monitor)" = "$first"
