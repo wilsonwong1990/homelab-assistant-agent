@@ -3,7 +3,8 @@
 This directory contains practical examples of how to interact with the Homelab Assistant Agent.
 
 For always-on local-model monitoring, Discord alerts, Hermes integration, and
-hybrid approval setup, see [the monitoring companion](monitoring/README.md).
+hybrid approval setup, see [the monitoring companion](monitoring/README.md) and
+its [deployment runbook](monitoring/DEPLOY.md).
 
 ## Quick Start Examples
 

@@ -44,7 +44,9 @@ This agent uses a **hybrid architecture** combining GitHub Copilot Agent Skills 
 The [monitoring companion](examples/monitoring/README.md) adds Proxmox/UniFi
 availability checks, selected Home Assistant entity checks, persistent Discord
 alerts, and bounded local Ollama investigation. Hermes or another MCP client can
-read the same incident state and reuse the canonical skills.
+read the same incident state and reuse the canonical skills. To deploy it, use the
+[deployment runbook](examples/monitoring/DEPLOY.md). It covers the scripted install,
+smoke test, upgrade/rollback and a bootable Ubuntu Desktop installer image.
 
 Execution is disabled by default. The hybrid policy permits exact Discord
 approval only for preapproved low-risk runbooks; configuration and higher-impact

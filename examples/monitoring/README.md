@@ -69,6 +69,10 @@ are external services and receive the selected notification/proposal content.
 
 ## Install and configure
 
+For a scripted host install, upgrade/rollback, smoke test, OS choice, or a
+bootable desktop installer image, see [DEPLOY.md](DEPLOY.md). The manual steps
+below are for development or other layouts.
+
 Use Python 3.9+ from this source checkout:
 
 ```bash

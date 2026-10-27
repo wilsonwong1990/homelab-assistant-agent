@@ -19,3 +19,47 @@ jobs:
           python-version: ${{ matrix.python }}
       - run: python -m unittest discover -s tests -v
       - run: python -m homelab_monitor --config examples/monitoring/monitoring.example.json validate
+  deploy-scripts:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint shell scripts
+        run: shellcheck examples/monitoring/deploy/*.sh examples/monitoring/image/build-iso.sh
+      - name: Parse autoinstall
+        run: |
+          sudo apt-get install -y -qq python3-yaml
+          python3 -c 'import sys,yaml; d=yaml.safe_load(open(sys.argv[1]))["autoinstall"]; assert d["version"] == 1 and "storage" in d["interactive-sections"] and "identity" not in d' examples/monitoring/image/autoinstall.yaml
+      - name: Fresh install (templates only)
+        run: |
+          sudo examples/monitoring/deploy/install.sh
+          sudo examples/monitoring/deploy/install.sh   # idempotent rerun
+          sudo examples/monitoring/deploy/smoke-test.sh --pre-enable
+          if sudo examples/monitoring/deploy/install.sh --enable; then
+            echo "--enable must refuse while placeholders remain"; exit 1
+          fi
+      - name: Enable against a loopback target
+        run: |
+          python3 -m http.server 18080 --bind 127.0.0.1 >/dev/null 2>&1 &
+          printf '%s\n' '{"interval": 10, "model": {"url": "http://127.0.0.1:11434", "name": "qwen3:4b"},' \
+            ' "checks": [{"id": "local", "kind": "http", "url": "http://127.0.0.1:18080/"}]}' \
+            | sudo tee /etc/homelab-monitor/monitoring.json >/dev/null
+          echo '# none' | sudo tee /etc/homelab-monitor/monitor.env >/dev/null
+          echo 'DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/0/ci-unused' | sudo tee /etc/homelab-monitor/notify.env >/dev/null
+          sudo examples/monitoring/deploy/install.sh --enable
+          sleep 30
+          sudo examples/monitoring/deploy/smoke-test.sh
+      - name: Upgrade and roll back
+        run: |
+          first="$(readlink -f /opt/homelab-monitor)"
+          git -c user.name=ci -c user.email=ci@example.invalid commit --allow-empty -qm "ci: second release"
+          sudo examples/monitoring/deploy/install.sh
+          test "$(readlink -f /opt/homelab-monitor)" != "$first"
+          ls /var/backups/homelab-monitor/monitor-*.db
+          sudo examples/monitoring/deploy/rollback.sh --list
+          sudo examples/monitoring/deploy/rollback.sh
+          test "$(readlink -f /opt/homelab-monitor)" = "$first"
+          sleep 15
+          sudo examples/monitoring/deploy/smoke-test.sh
+      - name: Service logs
+        if: failure()
+        run: sudo journalctl -u 'homelab-monitor@*' --no-pager -n 100
