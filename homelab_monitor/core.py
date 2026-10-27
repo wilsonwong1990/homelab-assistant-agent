@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import hashlib
+import http.client
 import logging
 import math
 import os
@@ -49,7 +50,7 @@ def request_json(url, *, headers=None, body=None, timeout=10, expect_json=True):
             return json.loads(raw) if raw and expect_json else None
     except urllib.error.HTTPError as error:
         raise TransportError(f"HTTP {error.code}") from None
-    except (urllib.error.URLError, TimeoutError, OSError) as error:
+    except (urllib.error.URLError, TimeoutError, OSError, http.client.HTTPException) as error:
         raise TransportError(f"network/TLS failure ({type(error).__name__})") from None
     except (ValueError, UnicodeError):
         raise TransportError("invalid JSON response") from None
@@ -307,7 +308,15 @@ def discord_url(value):
 def deliver(db, webhook):
     url = discord_url(webhook)
     events = db.execute(
-        "SELECT * FROM events WHERE sent IS NULL AND retry_at<=? ORDER BY created LIMIT 20",
+        """SELECT event.* FROM events AS event
+           WHERE event.sent IS NULL AND event.retry_at<=?
+             AND NOT EXISTS (
+                 SELECT 1 FROM events AS earlier
+                 WHERE earlier.check_id=event.check_id AND earlier.sent IS NULL
+                   AND (earlier.created<event.created
+                        OR (earlier.created=event.created AND earlier.rowid<event.rowid))
+             )
+           ORDER BY event.created, event.rowid LIMIT 20""",
         (time.time(),),
     ).fetchall()
     for event in events:

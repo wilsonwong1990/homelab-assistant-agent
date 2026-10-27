@@ -129,6 +129,11 @@ class MonitoringTests(Fixture):
                     self.send_response(302)
                     self.send_header("Location", "/secret")
                     self.end_headers()
+                elif self.path == "/truncated":
+                    self.send_response(200)
+                    self.send_header("Transfer-Encoding", "chunked")
+                    self.end_headers()
+                    self.wfile.write(b"A\r\npartial\r\n")
                 elif self.path == "/bad":
                     self.send_response(403)
                     self.end_headers()
@@ -153,6 +158,55 @@ class MonitoringTests(Fixture):
             core.request_json(base + "/redirect")
         with self.assertRaisesRegex(core.TransportError, r"^HTTP 403$"):
             core.request_json(base + "/bad")
+        with self.assertRaisesRegex(core.TransportError, "network/TLS failure"):
+            core.request_json(base + "/truncated")
+        checks = [
+            {**self.check, "url": base + "/truncated"},
+            {**self.check, "id": "second", "url": base + "/healthy"},
+        ]
+        core.poll(self.config(checks), self.db)
+        statuses = {row["id"]: row for row in core.snapshot(self.db)}
+        self.assertEqual(statuses["app"]["status"], "firing")
+        self.assertNotIn("partial", statuses["app"]["evidence"])
+        self.assertEqual(statuses["second"]["status"], "healthy")
+
+    def test_delivery_preserves_order_for_each_check(self):
+        core.record(self.db, self.check, False, "offline", now=100)
+        core.record(self.db, self.check, True, "online", now=200)
+        webhook = "https://discord.com/api/webhooks/123/abc"
+        with patch.object(core, "request_json", side_effect=core.TransportError("HTTP 500")):
+            core.deliver(self.db, webhook)
+        events = self.db.execute("SELECT * FROM events ORDER BY created").fetchall()
+        self.assertEqual([event["attempts"] for event in events], [1, 0])
+        self.assertEqual([event["sent"] for event in events], [None, None])
+
+        self.db.execute("UPDATE events SET retry_at=? WHERE kind='firing'", (time.time() + 3600,))
+        self.db.commit()
+        with patch.object(core, "request_json") as request:
+            core.deliver(self.db, webhook)
+        request.assert_not_called()
+        self.assertIsNone(self.db.execute(
+            "SELECT sent FROM events WHERE kind='resolved'"
+        ).fetchone()[0])
+
+        self.db.execute("UPDATE events SET retry_at=0 WHERE kind='firing'")
+        self.db.commit()
+        with patch.object(core, "request_json") as request:
+            core.deliver(self.db, webhook)
+        request.assert_called_once()
+        self.assertIsNotNone(self.db.execute(
+            "SELECT sent FROM events WHERE kind='firing'"
+        ).fetchone()[0])
+        self.assertIsNone(self.db.execute(
+            "SELECT sent FROM events WHERE kind='resolved'"
+        ).fetchone()[0])
+
+        with patch.object(core, "request_json") as request:
+            core.deliver(self.db, webhook)
+        request.assert_called_once()
+        self.assertIsNotNone(self.db.execute(
+            "SELECT sent FROM events WHERE kind='resolved'"
+        ).fetchone()[0])
 
     def test_local_model_only_and_invalid_output(self):
         for url in ("https://api.openai.com", "http://localhost:11434", "http://127.0.0.1@evil/"):
@@ -173,7 +227,10 @@ class MonitoringTests(Fixture):
         self.assertEqual(self.db.execute("SELECT state FROM investigations").fetchone()[0], "failed")
         with patch.object(core, "request_json") as request:
             core.deliver(self.db, "https://discord.com/api/webhooks/123/abc")
-        self.assertEqual(request.call_count, 2)
+        self.assertEqual(request.call_count, 1)
+        self.assertIsNone(self.db.execute(
+            "SELECT sent FROM events WHERE kind='diagnosis'"
+        ).fetchone()[0])
 
     def test_mcp_and_readonly_database(self):
         core.record(self.db, self.check, False, "offline")
