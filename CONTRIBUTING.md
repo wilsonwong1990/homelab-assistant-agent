@@ -77,6 +77,11 @@ Add or improve expertise in specific domains:
 
 When modifying the agent:
 
+The executable monitoring companion lives in [homelab-monitor](https://github.com/wilsonwong1990/homelab-monitor).
+It vendors pinned copies of the `monitoring`, `proxmox`, and `unifi` skills. After
+changing those skills here, run `scripts/sync-skills.sh --ref <commit>` in that
+repository so the monitor picks up the change.
+
 1. Test with actual homelab scenarios
 2. Verify the agent provides helpful, accurate guidance
 3. Check that examples work as described

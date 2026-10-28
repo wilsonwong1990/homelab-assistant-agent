@@ -2,6 +2,9 @@
 
 This directory contains practical examples of how to interact with the Homelab Assistant Agent.
 
+For always-on local-model monitoring, Discord alerts, Hermes integration, and
+hybrid approval setup, see the separate [homelab-monitor](https://github.com/wilsonwong1990/homelab-monitor) repository.
+
 ## Quick Start Examples
 
 ### Example 1: Setting Up K3s on Proxmox
