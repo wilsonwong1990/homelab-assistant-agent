@@ -36,14 +36,3 @@ repolist.private.md
 
 # Environment config (contains local paths — use .env.example as template)
 .env
-
-# Local monitoring configuration and runtime state
-monitoring.json
-execution-policy.json
-discord-identity.json
-state/
-.venv/
-__pycache__/
-*.egg-info/
-build/
-dist/
