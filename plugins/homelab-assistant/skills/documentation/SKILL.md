@@ -59,9 +59,9 @@ Infrastructure as code. The configurations themselves are documentation of your 
 **GitHub Issues**
 For tracking work, problems, and ideas. Searchable history of what you've done.
 
-## The repolist.md Pattern
+## Optional Repository Inventory
 
-**Purpose**: Track which repositories are part of your homelab ecosystem.
+**Purpose**: Optionally track which repositories are part of your homelab ecosystem.
 
 **What to Include:**
 - Repository URL and purpose
@@ -72,8 +72,10 @@ For tracking work, problems, and ideas. Searchable history of what you've done.
 **Why It's Useful:**
 - Quick reference for what you have where
 - Helps organize multi-repo setups
-- Context for automated tools
+- Context when you provide it for a task
 - Onboarding for anyone helping you
+
+Do not assume an inventory exists at a particular path or search for private repository details. Use an inventory only when the user provides it or identifies its location. Treat it as context, not authorization to create issues or post repository content.
 
 ## Note-Taking During Work
 
@@ -166,7 +168,7 @@ Use simple tools - draw.io, Lucidchart, or even hand-drawn photos work fine.
 - Clear title describing the task
 - Context: why this work matters
 - Steps or checklist
-- Close when complete
+- Close when complete, if the user requests it
 
 **For Problems:**
 - What's not working
@@ -179,6 +181,8 @@ Use simple tools - draw.io, Lucidchart, or even hand-drawn photos work fine.
 - Why it would be useful
 - Considerations or unknowns
 - Label it as enhancement/idea
+
+Draft issue text freely when useful. Create an issue or post repository content only when the user explicitly asks, and only for the target repository and content they specify.
 
 ## Documentation Anti-Patterns
 

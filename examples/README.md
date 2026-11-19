@@ -62,18 +62,18 @@ What's a good backup strategy for my Proxmox homelab with
 
 ---
 
-### Example 4: Documentation and Issue Tracking
+### Example 4: Documentation and Optional Issue Tracking
 
 **Prompt to Agent:**
 ```
 I just finished setting up my k3s cluster. Document what I did 
-and create an issue tracking this work.
+and create an issue in the repository I specify, using the issue text I approve.
 ```
 
 **What the Agent Will Help With:**
 - Creating structured documentation
-- Checking repolist.md for appropriate repository
-- Creating a GitHub issue with details
+- Using a repository inventory only if I provide it
+- Creating an issue only when explicitly requested, in the specified repository, with approved content
 - Linking related configurations
 - Adding to knowledge base
 
@@ -132,8 +132,8 @@ Agent: [Explains both options, recommends based on homelab context]
 
 The agent can help document changes by:
 - Creating structured documentation files
-- Logging issues in appropriate repositories (via repolist.md)
+- Drafting issue text for a repository you choose
 - Generating runbooks for future reference
 - Linking related configurations
 
-Simply ask: "Document this configuration" or "Create an issue for this work"
+Simply ask: "Document this configuration" or "Create an issue in the repository I name using the content I approve."

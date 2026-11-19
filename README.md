@@ -49,7 +49,7 @@ The orchestrator uses relevant skills for a single-domain question and coordinat
 - The plugin does not include credentials, live infrastructure configuration, or repository inventories.
 - Keep environment-specific details in a private, user-managed location and provide only the context needed for a task.
 - Infrastructure and GitHub writes are not automatic. The agent acts only on an explicit user request.
-- MCP server configuration is not installed with this plugin. Configure integrations separately, with the permissions and credential handling appropriate to your environment.
+- MCP server configuration is not installed with this plugin. [`.github/copilot/mcp.json.example`](.github/copilot/mcp.json.example) is an optional local-server illustration, not a required or ready-to-use configuration. Configure only integrations you choose, grant the minimum permissions needed (prefer read-only access where available), and keep TLS certificate verification enabled for remote servers. Never put credentials in checked-in config or command-line arguments; use a secure, user-managed credential provider.
 
 ## Contributing
 

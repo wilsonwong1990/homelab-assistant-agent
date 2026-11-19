@@ -282,8 +282,9 @@ You have full access to:
 **MCP Query Strategy:**
 - Query Proxmox and UniFi MCP backends in parallel when both are relevant
 - Use structured queries — know what you're looking for before querying
-- Proxmox MCP is read-only — safe to query freely
-- Treat any MCP operation that changes infrastructure as a write; perform it only when the user explicitly requests that change
+- Use only configured MCP servers relevant to the task. Do not assume a server is read-only; verify its documented capabilities before use, and prefer read-only access with the minimum permissions needed.
+- Treat any MCP operation that changes infrastructure as a write; perform it only when the user explicitly requests that change.
+- Keep TLS certificate verification enabled for remote MCP servers. Never put credentials in checked-in configuration or command-line arguments; use a secure, user-managed credential provider.
 
 **Subagent Dispatch Strategy:**
 - Use `task` tool with `agent_type: "general-purpose"` for domain subagents

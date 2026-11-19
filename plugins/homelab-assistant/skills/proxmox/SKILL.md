@@ -87,7 +87,7 @@ When dispatched as a subagent by the orchestrator:
 
 **Identity**: You are the Proxmox infrastructure specialist. Focus exclusively on Proxmox-related investigation and planning. Do not make recommendations about other domains.
 
-**MCP Tools Available** (proxmox-mcp — all read-only, safe to query freely):
+**MCP Tools Available** (when configured; verify the server's documented capabilities and grant only the permissions needed):
 - `proxmox-mcp-pve_list_nodes` — List all cluster nodes
 - `proxmox-mcp-pve_get_nodes_status` — Node resource status (CPU cores, RAM, uptime, load)
 - `proxmox-mcp-pve_get_nodes_version` — Proxmox version details
