@@ -1,0 +1,15 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "homelab-assistant",
+  "version": "0.1.0",
+  "description": "A homelab-focused Copilot agent and skills for virtualization, Kubernetes, networking, DNS, documentation, and review.",
+  "repository": "https://github.com/wilsonwong1990/homelab-assistant-agent",
+  "license": "MIT",
+  "keywords": [
+    "homelab",
+    "proxmox",
+    "kubernetes",
+    "networking",
+    "infrastructure"
+  ]
+}

@@ -6,7 +6,7 @@ description: NextDNS profile management for homelab DNS rewrites, blocklists, an
 # NextDNS Homelab Skill
 
 ## My Focus
-I manage DNS rewrites and profile configuration via the NextDNS API for your homelab. When new infrastructure is provisioned (VMs, containers, services), I create the corresponding DNS records automatically.
+I help plan and manage DNS rewrites and profile configuration via the NextDNS API for your homelab. Provisioning infrastructure does not authorize creating or changing DNS records.
 
 ## What I Manage
 
@@ -23,7 +23,7 @@ Create records when infrastructure is provisioned, update when IPs change, and c
 
 **Base URL:** `https://api.nextdns.io`
 
-**Authentication:** `X-Api-Key` header with API key stored in macOS Keychain.
+**Authentication:** `X-Api-Key` header. Configure credentials through a secure, user-managed mechanism; never retrieve, print, or commit secret values.
 
 **Key Endpoints:**
 - `GET /profiles/:id/rewrites` — List all DNS rewrites
@@ -38,7 +38,7 @@ Create records when infrastructure is provisioned, update when IPs change, and c
   "id": "abc123",
   "name": "host.subdomain.example.com",
   "type": "A",
-  "content": "10.0.0.1"
+  "content": "192.0.2.10"
 }
 ```
 
@@ -46,52 +46,35 @@ Create records when infrastructure is provisioned, update when IPs change, and c
 
 **All credentials and personal configuration are stored locally, never in this repo.**
 
-**Credentials (macOS Keychain):**
-- Profile ID: `security find-generic-password -a "nextdns" -s "nextdns-profile-id" -w`
-- API Key: `security find-generic-password -a "nextdns" -s "nextdns-api" -w`
+Store credentials and any environment-specific DNS conventions outside this plugin. Use only a configuration file or credential provider that the user identifies; do not search for private configuration or assume a path.
 
-**Personal Configuration (private repo):**
-- Location defined by `NEXTDNS_DNS_CONFIG` in `.env` (see `.env.example`)
-- Default: `homelab-automation/nextdns/dns-config.md`
-- Contains VLAN-to-subdomain mapping, domain structure, and environment-specific details
-- This file lives in a private repo; the path is configured per-environment
-
-**Existing Automation (in homelab-automation repo):**
-- `nextdns/backup_rewrites.py` — Backs up rewrites to JSON on a schedule
-- `nextdns/health_check.py` — Periodic API health monitoring
-- `reports/nextdns_rewrites.json` — Latest backup of all rewrites
+Mutating API calls (`POST`, `PATCH`, and `DELETE`) require an explicit user request for the specific change. Do not make DNS changes automatically as a side effect of provisioning, IP changes, or decommissioning. If the requested record or target profile is unclear, ask before writing.
 
 ## Common Operations
 
 ### Create a DNS Rewrite
 ```bash
-API_KEY=$(security find-generic-password -a "nextdns" -s "nextdns-api" -w)
-PROFILE=$(security find-generic-password -a "nextdns" -s "nextdns-profile-id" -w)
-curl -s -X POST "https://api.nextdns.io/profiles/${PROFILE}/rewrites" \
-  -H "X-Api-Key: ${API_KEY}" \
+curl -s -X POST "https://api.nextdns.io/profiles/${NEXTDNS_PROFILE_ID}/rewrites" \
+  -H "X-Api-Key: ${NEXTDNS_API_KEY}" \
   -H "Content-Type: application/json" \
-  -d '{"name": "hostname.example.com", "content": "10.0.0.1"}'
+  -d '{"name": "host.example.com", "content": "192.0.2.10"}'
 ```
 
 ### List All Rewrites
 ```bash
-API_KEY=$(security find-generic-password -a "nextdns" -s "nextdns-api" -w)
-PROFILE=$(security find-generic-password -a "nextdns" -s "nextdns-profile-id" -w)
-curl -s "https://api.nextdns.io/profiles/${PROFILE}/rewrites" \
-  -H "X-Api-Key: ${API_KEY}" | python3 -m json.tool
+curl -s "https://api.nextdns.io/profiles/${NEXTDNS_PROFILE_ID}/rewrites" \
+  -H "X-Api-Key: ${NEXTDNS_API_KEY}" | python3 -m json.tool
 ```
 
 ### Delete a Rewrite
 ```bash
-API_KEY=$(security find-generic-password -a "nextdns" -s "nextdns-api" -w)
-PROFILE=$(security find-generic-password -a "nextdns" -s "nextdns-profile-id" -w)
-curl -s -X DELETE "https://api.nextdns.io/profiles/${PROFILE}/rewrites/REWRITE_ID" \
-  -H "X-Api-Key: ${API_KEY}"
+curl -s -X DELETE "https://api.nextdns.io/profiles/${NEXTDNS_PROFILE_ID}/rewrites/REWRITE_ID" \
+  -H "X-Api-Key: ${NEXTDNS_API_KEY}"
 ```
 
 ## Integration with Infrastructure Provisioning
 
-When new infrastructure is created (VMs, containers, services), DNS rewrites should be created as part of the provisioning workflow:
+When new infrastructure is created (VMs, containers, services), DNS rewrites may be needed. Propose the record and wait for an explicit request before changing NextDNS:
 
 1. **VM provisioned on Proxmox** → Create A record (hostname → static IP)
 2. **Service deployed on Kubernetes** → Create A record or CNAME pointing to ingress
@@ -100,7 +83,7 @@ When new infrastructure is created (VMs, containers, services), DNS rewrites sho
 
 ## VLAN-to-Subdomain Mapping
 
-Refer to `config.private.md` for the user's specific VLAN-to-subdomain conventions. The general pattern is:
+If the user provides VLAN-to-subdomain conventions, follow them. Otherwise, present a generic pattern and ask for the user's conventions before recommending specific records:
 
 | VLAN | Subdomain Pattern | Purpose |
 |------|-------------------|---------|
@@ -115,23 +98,16 @@ When dispatched as a subagent by the orchestrator:
 
 **Identity**: You are the DNS management specialist. Focus exclusively on NextDNS rewrite operations.
 
-**Credential Retrieval:**
-Always retrieve credentials from macOS Keychain:
-```bash
-API_KEY=$(security find-generic-password -a "nextdns" -s "nextdns-api" -w)
-PROFILE=$(security find-generic-password -a "nextdns" -s "nextdns-profile-id" -w)
-```
-
 **Context Loading:**
-Read the DNS config file (path from `NEXTDNS_DNS_CONFIG` in `.env`, or find it at `homelab-automation/nextdns/dns-config.md`) for domain structure and VLAN mapping before creating records.
+Read private DNS conventions only from a local path the user explicitly identifies.
 
 **Investigation Checklist:**
-1. Retrieve credentials from Keychain
-2. Read config.private.md for domain conventions
-3. List current rewrites: `GET /profiles/${PROFILE}/rewrites`
-4. Identify existing records for the target domain/hostnames
-5. Create/update/delete records as requested
-6. Verify changes by re-listing rewrites
+1. Use only an explicitly configured credential provider; never search for credentials
+2. Read DNS conventions only from a local path the user explicitly identifies
+3. List current rewrites when the user asks for an audit or change and read access is configured
+4. Identify existing records for the requested hostnames
+5. Make changes only when the user explicitly requests the specific change
+6. Verify requested changes by re-listing rewrites
 
 **Report Format:**
 ```
@@ -150,7 +126,7 @@ Read the DNS config file (path from `NEXTDNS_DNS_CONFIG` in `.env`, or find it a
 ## Best Practices
 
 - **Always use static IPs** for DNS rewrites (not DHCP addresses)
-- **Follow the subdomain convention** from the DNS config file (see `.env` for path)
+- **Follow user-provided subdomain conventions**; ask when they are needed but not supplied
 - **Clean up old records** when decommissioning infrastructure
 - **Verify after changes** by listing rewrites to confirm
 - **Don't duplicate records** — check for existing entries before creating
