@@ -17,7 +17,7 @@ Internal hostname → IP mappings for homelab services. These are split-horizon 
 Blocklists, security settings, and parental controls via the NextDNS API.
 
 **DNS Lifecycle**
-Create records when infrastructure is provisioned, update when IPs change, and clean up when decommissioned.
+Plan records for new infrastructure, IP changes, and decommissioning. Make each change only when the user explicitly requests it.
 
 ## API Reference
 
@@ -74,12 +74,12 @@ curl -s -X DELETE "https://api.nextdns.io/profiles/${NEXTDNS_PROFILE_ID}/rewrite
 
 ## Integration with Infrastructure Provisioning
 
-When new infrastructure is created (VMs, containers, services), DNS rewrites may be needed. Propose the record and wait for an explicit request before changing NextDNS:
+When infrastructure is provisioned, changed, or decommissioned, identify whether DNS records may need attention. Propose the exact record changes; do not make them unless the user explicitly requests those changes.
 
-1. **VM provisioned on Proxmox** → Create A record (hostname → static IP)
-2. **Service deployed on Kubernetes** → Create A record or CNAME pointing to ingress
-3. **Infrastructure decommissioned** → Delete corresponding DNS records
-4. **IP address changes** → Delete old record, create new one (API has no PATCH for rewrites)
+- A provisioned VM may need a hostname-to-static-IP record.
+- A deployed service may need an A record or CNAME pointing to its ingress.
+- Decommissioned infrastructure may have records to remove.
+- An IP change may require replacing an old record because the API has no PATCH for rewrites.
 
 ## VLAN-to-Subdomain Mapping
 
@@ -114,20 +114,20 @@ Read private DNS conventions only from a local path the user explicitly identifi
 ## DNS Changes Made
 
 ### Created
-- hostname.subdomain.domain → 10.0.0.1 (ID: abc123)
+- hostname.subdomain.domain → 192.0.2.10 (ID: abc123)
 
 ### Deleted
 - old-hostname.subdomain.domain (ID: xyz789)
 
 ### Existing (unchanged)
-- other-host.subdomain.domain → 10.0.0.2
+- other-host.subdomain.domain → 192.0.2.20
 ```
 
 ## Best Practices
 
 - **Always use static IPs** for DNS rewrites (not DHCP addresses)
 - **Follow user-provided subdomain conventions**; ask when they are needed but not supplied
-- **Clean up old records** when decommissioning infrastructure
+- **Propose cleanup of related records** when the user asks to decommission infrastructure
 - **Verify after changes** by listing rewrites to confirm
 - **Don't duplicate records** — check for existing entries before creating
 - **Never commit credentials or personal domain/IP info** to the public repo

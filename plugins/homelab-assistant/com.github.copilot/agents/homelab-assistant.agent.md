@@ -93,7 +93,7 @@ Pass discovery results to domain specialists:
 **Phase 3 — Integration (your core job)**
 Synthesize domain plans into a coherent implementation:
 - Map cross-domain dependencies (e.g., Longhorn replication network → dedicated VLAN on UniFi → second NIC on each Proxmox VM → Linux bridge on each Proxmox node)
-- Resolve conflicts (e.g., "Only 64GB RAM across 2 nodes — 3 control-plane + 3 workers won't fit, so recommend dual-role nodes")
+- Resolve conflicts (e.g., discovered capacity may not fit the requested topology, so recommend a smaller design)
 - Sequence implementation steps across domains
 - Flag assumptions that need user confirmation
 
@@ -332,9 +332,9 @@ You have full access to:
 - Firewall subagent → "Given [UniFi network state], design VLANs for: management, k3s inter-node, Longhorn replication, workload ingress. Provide rule matrix"
 
 **Phase 3 — You integrate:**
-- "K3s needs 3 dual-role nodes with 4 vCPUs, 8GB RAM, 50GB OS + 100GB Longhorn each. Proxmox has 2 nodes with 32GB each — this fits with headroom."
-- "Longhorn replication needs a dedicated VLAN (30) on UniFi. Each VM needs a second NIC on a new Linux bridge mapped to VLAN 30."
-- "MetalLB range 10.0.20.100-150 on the services VLAN. UniFi port profiles need updating for trunk ports to Proxmox nodes."
+- "Size the K3s nodes against the Proxmox capacity discovered for this task, with headroom for existing workloads."
+- "Longhorn replication needs a dedicated network path. Map the user-approved storage VLAN through the UniFi switch and Proxmox VM interfaces."
+- "Choose a MetalLB address pool from the user's available service subnet and verify that it does not overlap existing allocations."
 
 **Phase 4 — You dispatch QA validation:**
 - QA subagent → "Validate this integrated plan: check resource arithmetic, network consistency across all VLAN/subnet/IP references, sequence safety, and completeness"
