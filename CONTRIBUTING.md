@@ -24,8 +24,8 @@ The agent can be improved in several ways:
 
 Add or improve expertise in specific domains:
 
-- Update `.github/agents/homelab-assistant.agent.md`
-- Add new skill sections with practical guidance
+- Update `plugins/homelab-assistant/com.github.copilot/agents/homelab-assistant.agent.md`
+- Add skills under `plugins/homelab-assistant/skills/<skill-name>/SKILL.md`
 - Include examples and common scenarios
 - Explain best practices vs. homelab trade-offs
 
@@ -34,7 +34,7 @@ Add or improve expertise in specific domains:
 - Enhance README.md with better examples
 - Add troubleshooting guides
 - Create tutorials for common tasks
-- Improve repolist.md template
+- Improve marketplace and installation documentation
 
 #### 3. Adding Examples
 
@@ -61,6 +61,7 @@ Add or improve expertise in specific domains:
    - Edit relevant files
    - Test the agent behavior
    - Update documentation
+   - Keep the marketplace catalog in `.github/plugin/marketplace.json` and plugin assets under `plugins/homelab-assistant/`
 
 4. **Commit with clear messages**
    ```bash
@@ -102,6 +103,7 @@ When editing the agent prompt:
 - **Be Balanced**: Mention best practices while keeping homelab context
 - **Be Specific**: Provide concrete examples and commands
 - **Be Safe**: Always consider security implications
+- **Respect explicit authorization**: Do not make infrastructure or GitHub changes unless the user asks for that specific action
 
 ### Documentation Style
 
