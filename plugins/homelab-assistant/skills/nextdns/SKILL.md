@@ -23,7 +23,7 @@ Plan records for new infrastructure, IP changes, and decommissioning. Make each 
 
 **Base URL:** `https://api.nextdns.io`
 
-**Authentication:** `X-Api-Key` header. Configure credentials through a secure, user-managed mechanism; never retrieve, print, or commit secret values.
+**Authentication:** `X-Api-Key` header. Use only a secure credential provider or private curl config file that the user identifies; never search for, retrieve, print, or commit secret values. Keep the config outside the repository and restrict access (for example, mode `0600` on POSIX systems). Do not put API keys in command-line arguments. Use the HTTPS API endpoint and keep TLS certificate verification enabled.
 
 **Key Endpoints:**
 - `GET /profiles/:id/rewrites` — List all DNS rewrites
@@ -48,28 +48,34 @@ Plan records for new infrastructure, IP changes, and decommissioning. Make each 
 
 Store credentials and any environment-specific DNS conventions outside this plugin. Use only a configuration file or credential provider that the user identifies; do not search for private configuration or assume a path.
 
+For the curl examples below, the user can set `NEXTDNS_CURL_CONFIG` to the path of a private curl config file they manage. Its contents should include the authentication header:
+
+```text
+header = "X-Api-Key: <your-api-key>"
+```
+
+Set `NEXTDNS_PROFILE_ID` to the profile the user identifies. Do not ask the user to paste a key into chat or inspect their private config.
+The identified curl config must not disable TLS verification. The examples start with `-q` so curl ignores any default config that could disable verification.
+
 Mutating API calls (`POST`, `PATCH`, and `DELETE`) require an explicit user request for the specific change. Do not make DNS changes automatically as a side effect of provisioning, IP changes, or decommissioning. If the requested record or target profile is unclear, ask before writing.
 
 ## Common Operations
 
 ### Create a DNS Rewrite
 ```bash
-curl -s -X POST "https://api.nextdns.io/profiles/${NEXTDNS_PROFILE_ID}/rewrites" \
-  -H "X-Api-Key: ${NEXTDNS_API_KEY}" \
+curl -q -s --config "$NEXTDNS_CURL_CONFIG" -X POST "https://api.nextdns.io/profiles/${NEXTDNS_PROFILE_ID}/rewrites" \
   -H "Content-Type: application/json" \
   -d '{"name": "host.example.com", "content": "192.0.2.10"}'
 ```
 
 ### List All Rewrites
 ```bash
-curl -s "https://api.nextdns.io/profiles/${NEXTDNS_PROFILE_ID}/rewrites" \
-  -H "X-Api-Key: ${NEXTDNS_API_KEY}" | python3 -m json.tool
+curl -q -s --config "$NEXTDNS_CURL_CONFIG" "https://api.nextdns.io/profiles/${NEXTDNS_PROFILE_ID}/rewrites" | python3 -m json.tool
 ```
 
 ### Delete a Rewrite
 ```bash
-curl -s -X DELETE "https://api.nextdns.io/profiles/${NEXTDNS_PROFILE_ID}/rewrites/REWRITE_ID" \
-  -H "X-Api-Key: ${NEXTDNS_API_KEY}"
+curl -q -s --config "$NEXTDNS_CURL_CONFIG" -X DELETE "https://api.nextdns.io/profiles/${NEXTDNS_PROFILE_ID}/rewrites/REWRITE_ID"
 ```
 
 ## Integration with Infrastructure Provisioning
@@ -102,7 +108,7 @@ When dispatched as a subagent by the orchestrator:
 Read private DNS conventions only from a local path the user explicitly identifies.
 
 **Investigation Checklist:**
-1. Use only an explicitly configured credential provider; never search for credentials
+1. Use only an explicitly configured credential provider or a private curl config the user identifies; never search for credentials
 2. Read DNS conventions only from a local path the user explicitly identifies
 3. List current rewrites when the user asks for an audit or change and read access is configured
 4. Identify existing records for the requested hostnames

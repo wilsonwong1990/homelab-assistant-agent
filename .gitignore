@@ -31,8 +31,8 @@ coverage/
 #Private repolist
 repolist.private.md
 
-# MCP config (contains local paths — use mcp.json.example as template)
+# Local MCP config (user-specific; see README before configuring)
 .github/copilot/mcp.json
 
-# Environment config (contains local paths — use .env.example as template)
+# Local environment config (may contain user-specific paths or values)
 .env
